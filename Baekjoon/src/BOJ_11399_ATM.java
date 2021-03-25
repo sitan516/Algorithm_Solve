@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main{
+public class BOJ_11399_ATM{
 	
 	static int[] arr;
 	

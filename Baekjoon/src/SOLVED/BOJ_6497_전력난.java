@@ -1,3 +1,5 @@
+package SOLVED;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -80,24 +82,24 @@ public class BOJ_6497_전력난{
 		arr[A] = arr[B] = Math.min(A, B);
 	}
 	
-	
+	static class Line implements Comparable<Line>{
+		int from;
+		int to;
+		int cost;
+		public Line(int from, int to, int cost) {
+			super();
+			this.from = from;
+			this.to = to;
+			this.cost = cost;
+		}
+		@Override
+		public int compareTo(Line o) {
+			
+			return this.cost-o.cost;
+		}
+		
+	}
 }
 
-class Line implements Comparable<Line>{
-	int from;
-	int to;
-	int cost;
-	public Line(int from, int to, int cost) {
-		super();
-		this.from = from;
-		this.to = to;
-		this.cost = cost;
-	}
-	@Override
-	public int compareTo(Line o) {
-		
-		return this.cost-o.cost;
-	}
-	
-}
+
 
