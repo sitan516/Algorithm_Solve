@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.*;
 
 public class Main{
@@ -13,22 +14,26 @@ public class Main{
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int N = Integer.parseInt(br.readLine());
-		int[] num = new int[N];
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			num[i] = Integer.parseInt(st.nextToken());
-		}
-		Arrays.sort(num);
+		String s = br.readLine();
 		
-		int answer = 0;
-		int time = 0;
-		for (int i = 0; i < num.length; i++) {
-			time += num[i];
-			answer += time;
-		}
+		BigInteger num = new BigInteger(s);
 		
-		System.out.println(answer);
+		BigInteger l = new BigInteger("0");
+		BigInteger r = new BigInteger(s);
+		
+		while(true) {
+			BigInteger mid = l.add(r);
+			mid = mid.divide(new BigInteger("2"));
+			if(mid.multiply(mid).compareTo(num) > 0) {
+				r = mid;
+			} else if(mid.multiply(mid).compareTo(num) < 0) {
+				l = mid.add(new BigInteger("1"));
+			} else {
+				System.out.println(mid);
+				break;
+			}
+			
+		}
 		
 		
 	}
