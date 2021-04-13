@@ -6,6 +6,8 @@ import java.util.*;
 
 public class Solution {
 
+	
+	
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,132 +19,101 @@ public class Solution {
 		for (int testCase = 1; testCase <= T; testCase++) {
 			
 			st = new StringTokenizer(br.readLine());
-			
+				
 			int N = Integer.parseInt(st.nextToken());
-			int K = Integer.parseInt(st.nextToken());
+			int X = Integer.parseInt(st.nextToken());
 			
-			int[] num = new int[N];
-			int[] has = new int[N];
+			int map[][] = new int[N][N];
 			
-			st = new StringTokenizer(br.readLine());
-			for (int i = 0; i < N; i++) {
-				num[i] = Integer.parseInt(st.nextToken());
-				has[i] = getGCD(num[i], K);
-			}
-			
-			Map<Integer, Integer> hasMap = new HashMap<Integer, Integer>();
-			
-			for (int i = 0; i < N; i++) {
-				hasMap.computeIfPresent(has[i], (k,v) -> v+1);
-				hasMap.putIfAbsent(has[i], 1);
-			}
-			
-			int[] hasNum = new int[hasMap.size()];
-			int[] numberOfHas = new int[hasMap.size()];
-			int index = 0;
-			for (Integer key : hasMap.keySet()) {
-				hasNum[index] = key;
-				numberOfHas[index++] = hasMap.get(key);
-			}
-			
-			BigInteger cnt = new BigInteger("0");
-			BigInteger temp;
-			BigInteger l;
-			// 같은 3개 숫자를 선택하는 경우
-			for (int i = 0; i < hasNum.length; i++) {
-				if(numberOfHas[i] >= 3) {
-					
-					l = new BigInteger("1");
-					l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-					l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-					l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-					
-					if(l.mod(new BigInteger(Integer.toString(K))).toString().equals("0")) {
-						temp = new BigInteger(Integer.toString(numberOfHas[i]));
-						temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[i] - 1)));
-						temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[i] - 2)));
-						temp = temp.divide(new BigInteger("6"));
-						cnt = cnt.add(temp);
-					}
+			for (int r = 0; r < N; r++) {
+				st = new StringTokenizer(br.readLine());
+				for (int c = 0; c < N; c++) {
+					map[r][c] = Integer.parseInt(st.nextToken());
 				}
 			}
 			
-			// 서로 다른 2개 숫자를 선택하는 경우
-			for (int i = 0; i < hasNum.length-1; i++) {
-				for (int j = i+1; j < hasNum.length; j++) {
-					
-					//i 번째를 두 개 선택하는 경우
-					if(numberOfHas[i] >= 2) {
-						l = new BigInteger("1");
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[j])));
-						if(l.mod(new BigInteger(Integer.toString(K))).toString().equals("0")) {
-							temp = new BigInteger(Integer.toString(numberOfHas[i]));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[i] - 1)));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[j])));
-							temp = temp.divide(new BigInteger("2"));
-							cnt = cnt.add(temp);
-						}
+			int cnt = 0;
+			
+			// 높이가 바뀌면 낮은쪽 높이가 연속으로 x개 존재해야함
+			
+			for (int r = 0; r < N; r++) {
+				int serial = 1;
+				int last = map[r][0];
+				int underFlag = 0;
+				
+				boolean cntFlag = true;
+				for (int c = 1; c < N; c++) {
+					if(underFlag > 0 && serial == X) {
+						serial = 0;
+						underFlag--;
 					}
-					
-					//j 번째를 두 개 선택하는 경우
-					if(numberOfHas[j] >= 2) {
-						l = new BigInteger("1");
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[j])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[j])));
-						if(l.mod(new BigInteger(Integer.toString(K))).toString().equals("0")) {
-							temp = new BigInteger(Integer.toString(numberOfHas[i]));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[j] - 1)));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[j])));
-							temp = temp.divide(new BigInteger("2"));
-							cnt = cnt.add(temp);
+					if(map[r][c] == last) {
+						serial++;
+					} else if(map[r][c] > last) {
+						if(serial < X * (map[r][c] - last)) {
+							cntFlag = false;
+							break;
 						}
+						serial = 1;
+						last = map[r][c];
+					} else if(map[r][c] < last) {
+						if(underFlag > 0) {
+							cntFlag = false;
+							break;
+						}
+						serial = 1;
+						underFlag = last - map[r][c];
+						last = map[r][c];
 					}
 				}
+				if(underFlag > 0 && serial < X) cntFlag = false;
+				if(cntFlag) cnt++;
 			}
 			
-			// 서로 다른 3개 숫자를 선택하는 경우
-			for (int i = 0; i < hasNum.length-2; i++) {
-				for (int j = i+1; j < hasNum.length-1; j++) {
-					for (int k = j+1; k < hasNum.length; k++) {
-						l = new BigInteger("1");
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[i])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[j])));
-						l = l.multiply(new BigInteger(Integer.toString(hasNum[k])));
-						if(l.mod(new BigInteger(Integer.toString(K))).toString().equals("0")) {
-							temp = new BigInteger(Integer.toString(numberOfHas[i]));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[j])));
-							temp = temp.multiply(new BigInteger(Integer.toString(numberOfHas[k])));
-							cnt = cnt.add(temp);
+			for (int c = 0; c < N; c++) {
+				int serial = 1;
+				int last = map[0][c];
+				int underFlag = 0;
+				boolean cntFlag = true;
+				for (int r = 1; r < N; r++) {
+					if(underFlag > 0 && serial == X) {
+						serial = 0;
+						underFlag--;
+					}
+					if(map[r][c] == last) {
+						serial++;
+					} else if(map[r][c] > last) {
+						if(serial < X * (map[r][c] - last)) {
+							cntFlag = false;
+							break;
 						}
+						serial = 1;
+						last = map[r][c];
+					} else if(map[r][c] < last) {
+						if(underFlag > 0) {
+							cntFlag = false;
+							break;
+						}
+						serial = 1;
+						underFlag = last - map[r][c];
+						last = map[r][c];
 					}
 				}
+				if(underFlag > 0 && serial < X) cntFlag = false;
+				if(cntFlag) cnt++;
 			}
 			
-			sb.append("#").append(testCase).append(" ").append(cnt).append("\n");
+			sb.append("#").append(testCase).append(" ").append(cnt).append("\n").append("\n");
+			
+			
+		
 		}
+			
+		System.out.println(sb);
 		
 		
 
-		System.out.println(sb);
-	}
-	
-	static int getGCD(int a, int b) {
-		int M = Math.max(a,b);
-		int N = Math.min(a,b);
-		int pre = 1;
-		while(true) {
-			pre = M % N;
-			if(pre == 0) {
-				break;
-			}else {
-				M = N;
-				N = pre;
-			}
-		}
-		return N;
+		
 	}
 	
 }

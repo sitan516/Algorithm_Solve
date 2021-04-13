@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.*;
 
-public class Main {
+public class BOJ_1806_부분합 {
 	
 	public static void main(String[] args) throws Exception {
 
