@@ -1,10 +1,11 @@
+package SOLVED;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.*;
 
-public class BOJ_2468_안전구역 {
+public class BOJ_2468_안전영역 {
 	
 	static int N;
 	static int K;

@@ -1,7 +1,8 @@
+package SOLVED;
 import java.io.*;
 import java.util.*;
 
-public class Solution {
+public class Solution_SWEA_5604_구간합_조규홍 {
 	static long preSum[] = new long[17];
 
 	public static void main(String[] args) throws Exception {
@@ -12,7 +13,12 @@ public class Solution {
 
 		int T = Integer.parseInt(br.readLine());
 
-		
+		preSum[0] = 1;
+		preSum[1] = 45;
+
+		for (int i = 2; i < preSum.length; i++) {
+			preSum[i] = (long) (preSum[1] * ((i) * Math.pow(10, i-1)));
+		}
 
 		for (int tc = 1; tc <= T; tc++) {
 			st = new StringTokenizer(br.readLine());
