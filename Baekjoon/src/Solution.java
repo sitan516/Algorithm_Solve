@@ -1,13 +1,9 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
+import java.io.*;
 import java.util.*;
 
 public class Solution {
+	static long preSum[] = new long[17];
 
-	
-	
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,105 +11,50 @@ public class Solution {
 		StringTokenizer st;
 
 		int T = Integer.parseInt(br.readLine());
-		
-		for (int testCase = 1; testCase <= T; testCase++) {
-			
-			st = new StringTokenizer(br.readLine());
-				
-			int N = Integer.parseInt(st.nextToken());
-			int X = Integer.parseInt(st.nextToken());
-			
-			int map[][] = new int[N][N];
-			
-			for (int r = 0; r < N; r++) {
-				st = new StringTokenizer(br.readLine());
-				for (int c = 0; c < N; c++) {
-					map[r][c] = Integer.parseInt(st.nextToken());
-				}
-			}
-			
-			int cnt = 0;
-			
-			// 높이가 바뀌면 낮은쪽 높이가 연속으로 x개 존재해야함
-			
-			for (int r = 0; r < N; r++) {
-				int serial = 1;
-				int last = map[r][0];
-				int underFlag = 0;
-				
-				boolean cntFlag = true;
-				for (int c = 1; c < N; c++) {
-					if(underFlag > 0 && serial == X) {
-						serial = 0;
-						underFlag--;
-					}
-					if(map[r][c] == last) {
-						serial++;
-					} else if(map[r][c] > last) {
-						if(serial < X * (map[r][c] - last)) {
-							cntFlag = false;
-							break;
-						}
-						serial = 1;
-						last = map[r][c];
-					} else if(map[r][c] < last) {
-						if(underFlag > 0) {
-							cntFlag = false;
-							break;
-						}
-						serial = 1;
-						underFlag = last - map[r][c];
-						last = map[r][c];
-					}
-				}
-				if(underFlag > 0 && serial < X) cntFlag = false;
-				if(cntFlag) cnt++;
-			}
-			
-			for (int c = 0; c < N; c++) {
-				int serial = 1;
-				int last = map[0][c];
-				int underFlag = 0;
-				boolean cntFlag = true;
-				for (int r = 1; r < N; r++) {
-					if(underFlag > 0 && serial == X) {
-						serial = 0;
-						underFlag--;
-					}
-					if(map[r][c] == last) {
-						serial++;
-					} else if(map[r][c] > last) {
-						if(serial < X * (map[r][c] - last)) {
-							cntFlag = false;
-							break;
-						}
-						serial = 1;
-						last = map[r][c];
-					} else if(map[r][c] < last) {
-						if(underFlag > 0) {
-							cntFlag = false;
-							break;
-						}
-						serial = 1;
-						underFlag = last - map[r][c];
-						last = map[r][c];
-					}
-				}
-				if(underFlag > 0 && serial < X) cntFlag = false;
-				if(cntFlag) cnt++;
-			}
-			
-			sb.append("#").append(testCase).append(" ").append(cnt).append("\n").append("\n");
-			
-			
-		
-		}
-			
-		System.out.println(sb);
-		
-		
 
 		
+
+		for (int tc = 1; tc <= T; tc++) {
+			st = new StringTokenizer(br.readLine());
+			long A = Long.parseLong(st.nextToken()) - 1;
+			long B = Long.parseLong(st.nextToken());
+			
+			long a = F(A, (int) Math.floor(Math.log10(A)));
+			long b = F(B, (int) Math.floor(Math.log10(B)));
+			
+			sb.append("#").append(tc).append(" ").append(b-a).append("\n");
+			
+		}
+
+		System.out.println(sb);
+
 	}
-	
+
+	static long F(long n, int v) {
+		
+		if(v==0) {
+			return n*(n+1)/2;
+		}
+		
+		if(n==0) return 0;
+		long l = 0;
+		long v10 = (long) Math.pow(10, v);
+		long a = (n - n % v10); // 몇자리 수 인지
+		long first = (n / v10); // 첫번째 자리 수
+		if(first == 0) {
+			l+= G(n,v);
+		} else {
+			l = preSum[(int) Math.floor(Math.log10(a))] * first;
+			l += v10 * first * (first-1) / 2;
+			l += G(n, v);
+		}
+		
+		return l;
+	}
+
+	private static long G(long n, int v) {
+		long v10 = (long) Math.pow(10, v);
+		return n/v10 * (n%v10+1) + F((n%v10), v-1);				
+	}
+
 }
