@@ -1,3 +1,5 @@
+package SOLVED;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +11,7 @@ public class BOJ_2098_외판원순회 {
 	static int[][] route;
 	static int[][] memo;
 	static int arrive;
-	static int answer = Integer.MAX_VALUE;
+	static int INF = 16000001;
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 
@@ -30,28 +32,22 @@ public class BOJ_2098_외판원순회 {
 		}
 
 		for (int i = 0; i < N; i++) {
-			Arrays.fill(memo[i], Integer.MAX_VALUE);
+			Arrays.fill(memo[i], INF);
 
 		}
 
-		move(0, 1);
-
-
-		System.out.println(memo[0][1]);
+		System.out.println(move(0, 1));
 	}
 
 	public static int move(int pos, int bitmask) {
 
-		if(memo[pos][bitmask] != Integer.MAX_VALUE) return memo[pos][bitmask];
-
 		if(bitmask == arrive) {
 			if(route[pos][0] != 0){
-				memo[pos][bitmask] = route[pos][0];
 				return route[pos][0];
-			}else{
-				return Integer.MAX_VALUE;
-			}
+			} return INF;
 		}
+
+		if(memo[pos][bitmask] != INF) return memo[pos][bitmask];
 
 		for (int next = 1; next < N; next++) {
 			if((bitmask & 1<<next) != 0 || route[pos][next] == 0) continue;
