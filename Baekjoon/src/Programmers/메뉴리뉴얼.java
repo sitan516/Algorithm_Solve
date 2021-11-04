@@ -27,12 +27,14 @@ class Solution2 {
         String[] answer = {};
         List<String> answerList = new ArrayList<String>();
         
+        // course 정렬
         for (int i = 0; i < orders.length; i++) {
 			char[] charArr = orders[i].toCharArray();
 			Arrays.sort(charArr);
         	orders[i] = new String(charArr);
 		}
         
+        // 만들 수 있는 세트메뉴 세기
         for (int c = 0; c < course.length; c++) {
         	for (int i = 0; i < orders.length; i++) {
         		setGroup(course[c], orders[i], 0, 0, 0);
@@ -42,10 +44,12 @@ class Solution2 {
         Set<String> keySet = group.keySet();
         int[] max = new int[11];
         
+        // 가장 많은 세트 메뉴의 수
         for (String key : keySet) {
 			max[key.length()] = Math.max(max[key.length()], group.get(key));
 		}
         
+        // 정답 하나씩 추가
         for (String key : keySet) {
         	if(group.get(key) == max[key.length()]) {
         		if(max[key.length()] < 2) continue;
@@ -66,7 +70,7 @@ class Solution2 {
 			}
 //    		group.computeIfPresent(sb.toString(), (k,v)->v+1);
 //    		group.putIfAbsent(sb.toString(), 1);
-    		group.compute(sb.toString(), (key, value) -> value == null ? 1 : value + 1);
+    		group.compute(sb.toString(), (k, v) -> v == null ? 1 : v + 1);
     		return;
     	} else {
     		for (int i = idx; i < order.length(); i++) {
